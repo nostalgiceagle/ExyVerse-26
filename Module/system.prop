@@ -1,0 +1,3 @@
+ro.build.official.release=false
+ro.surface_flinger.set_idle_timer_ms=250
+ro.surface_flinger.set_touch_timer_ms=300

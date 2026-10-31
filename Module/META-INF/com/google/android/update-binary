@@ -1,0 +1,71 @@
+#!/sbin/sh
+
+#################
+# Initialization
+#################
+
+umask 022
+
+# echo before loading util_functions
+ui_print() { echo "$1"; }
+
+require_new_magisk() {
+  ui_print "*******************************"
+  ui_print " Please install Magisk v20.4+! "
+  ui_print "*******************************"
+  exit 1
+}
+
+warn_install() {
+  ui_print "****************************************"
+  ui_print " $1"
+  ui_print "****************************************"
+}
+
+abort_install() {
+  ui_print "****************************************"
+  ui_print " $1"
+  ui_print "****************************************"
+  exit 1
+}
+
+#########################
+# Load util_functions.sh
+#########################
+
+OUTFD=$2
+ZIPFILE=$3
+
+mount /data 2>/dev/null
+
+[ -f /data/adb/magisk/util_functions.sh ] || require_new_magisk
+. /data/adb/magisk/util_functions.sh
+[ $MAGISK_VER_CODE -lt 20400 ] && require_new_magisk
+
+BOOTLOADER=$(getprop ro.bootloader)
+META_MODULE_DIR="/data/adb/modules/magic_mount_rs"
+ONEUI_VERSION=$(getprop ro.build.version.oneui | awk '{printf "%.1f", $1/10000}')
+
+case "$BOOTLOADER" in
+  *A26*)
+    ui_print "- Supported device detected: $BOOTLOADER"
+    ;;
+  *)
+    abort_install "Error: Unsupported device! ($BOOTLOADER)"
+    ;;
+esac
+
+if [ -z "$ONEUI_VERSION" ] || [ "$ONEUI_VERSION" != "9.0" ]; then
+  abort_install "ERROR: Detected One UI $ONEUI_VERSION. Only One UI 9.0 is supported!"
+fi
+
+if [ ! -d "$META_MODULE_DIR" ]; then
+  warn_install "WARNING: Suggested meta-module not found, changes may not take effect!"
+fi
+
+#########################
+# Module Installation
+#########################
+
+install_module
+exit 0

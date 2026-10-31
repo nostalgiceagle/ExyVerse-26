@@ -1,0 +1,8 @@
+id=ExyVerse_A26
+name=ExyVerse A26
+version=Initial 1
+versionCode=10000
+author=nostalgiceagle
+description=A module for Galaxy A26 to make it featureful.
+banner=https://github.com/user-attachments/assets/f3145505-572e-4c9f-a76d-8885656e4f49
+updateJson=https://raw.githubusercontent.com/nostalgiceagle/ExyVerse-26/refs/heads/OneUI9/update.json
